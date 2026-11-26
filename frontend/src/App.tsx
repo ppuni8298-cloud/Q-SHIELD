@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Layout } from './components/Layout';
+import { CyberCursor } from './components/CyberCursor';
 
 import LandingPage from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
+import { SignupPage } from './pages/SignupPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { IdentitiesPage } from './pages/IdentitiesPage';
 import { DevicesPage } from './pages/DevicesPage';
@@ -43,10 +45,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <CyberCursor />
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
 
           {/* Protected Console layout */}
           <Route

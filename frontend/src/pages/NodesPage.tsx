@@ -74,11 +74,13 @@ export function NodesPage() {
     setError(null);
     try {
       const [nodesRes, eventsRes] = await Promise.all([
-        api.get<{ items: NodeState[] }>('/nodes'),
-        api.get<{ items: RevocationEventRecord[] }>('/revocations/events'),
+        api.get<any>('/nodes'),
+        api.get<any>('/revocations/events'),
       ]);
-      setNodes(nodesRes.items);
-      setEvents(eventsRes.items);
+      const nodeList = Array.isArray(nodesRes) ? nodesRes : (nodesRes?.items || []);
+      const eventList = Array.isArray(eventsRes) ? eventsRes : (eventsRes?.items || []);
+      setNodes(nodeList);
+      setEvents(eventList);
     } catch (err) {
       setError(err);
     } finally {

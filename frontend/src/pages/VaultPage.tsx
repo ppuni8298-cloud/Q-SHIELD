@@ -37,8 +37,8 @@ export function VaultPage() {
 
   // Policy eval interactive test
   const [evalActor, setEvalActor] = useState(user?.actor_id || 'user-alex');
-  const [evalSession, setEvalSession] = useState(user?.session.id || 'sess-alex-valid');
-  const [evalDevice, setEvalDevice] = useState(user?.session.device_id || 'dev-alex-trusted');
+  const [evalSession, setEvalSession] = useState(user?.session?.id || 'sess-alex-valid');
+  const [evalDevice, setEvalDevice] = useState(user?.session?.device_id || 'dev-alex-trusted');
   const [evalResId, setEvalResId] = useState('res-alex-brief');
   const [evalAction, setEvalAction] = useState('read');
   const [policyResult, setPolicyResult] = useState<PolicyDecision | null>(null);

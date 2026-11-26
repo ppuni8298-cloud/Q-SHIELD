@@ -48,11 +48,13 @@ export function IdentitiesPage() {
     setError(null);
     try {
       const [uRes, rRes] = await Promise.all([
-        api.get<{ items: UserRecord[] }>('/users'),
-        api.get<{ roles: RoleDefinition[] }>('/roles'),
+        api.get<any>('/users'),
+        api.get<any>('/roles'),
       ]);
-      setUsers(uRes.items);
-      setRoles(rRes.roles);
+      const userList = Array.isArray(uRes) ? uRes : (uRes?.items || []);
+      const roleList = Array.isArray(rRes) ? rRes : (rRes?.roles || rRes?.items || []);
+      setUsers(userList);
+      setRoles(roleList);
     } catch (err) {
       setError(err);
     } finally {

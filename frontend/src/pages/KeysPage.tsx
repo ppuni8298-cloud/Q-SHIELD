@@ -77,13 +77,16 @@ export function KeysPage() {
     setError(null);
     try {
       const [kRes, rRes, bRes] = await Promise.all([
-        api.get<{ items: KeyMetadata[] }>('/keys'),
-        api.get<{ items: RotationOperation[] }>('/keys/rotations'),
-        api.get<{ items: BackupManifest[] }>('/keys/backups'),
+        api.get<any>('/keys'),
+        api.get<any>('/keys/rotations'),
+        api.get<any>('/keys/backups'),
       ]);
-      setKeys(kRes.items);
-      setRotations(rRes.items);
-      setBackups(bRes.items);
+      const keyList = Array.isArray(kRes) ? kRes : (kRes?.items || []);
+      const rotationList = Array.isArray(rRes) ? rRes : (rRes?.items || []);
+      const backupList = Array.isArray(bRes) ? bRes : (bRes?.items || []);
+      setKeys(keyList);
+      setRotations(rotationList);
+      setBackups(backupList);
     } catch (err) {
       setError(err);
     } finally {

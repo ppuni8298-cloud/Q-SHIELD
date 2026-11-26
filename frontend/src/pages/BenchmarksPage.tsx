@@ -49,12 +49,40 @@ export default function BenchmarksPage() {
     loadBenchmarks();
   }, []);
 
+  const normalizeBenchmarkData = (res: any): BenchmarkSummary => {
+    const rawList: any[] = res?.results || res?.benchmarks || [];
+    const items: BenchmarkItem[] = rawList.map((b: any) => ({
+      operation: String(b.operation || 'Operation'),
+      iterations: Number(b.samples || b.iterations || 100),
+      throughput_ops_sec: Number(b.throughput_ops_sec || 0),
+      latency_ms: {
+        p50: Number(b.median_ms ?? b.latency_ms?.p50 ?? 0),
+        p95: Number(b.p95_ms ?? b.latency_ms?.p95 ?? 0),
+        p99: Number(b.max_ms ?? b.latency_ms?.p99 ?? 0),
+        min: Number(b.min_ms ?? b.latency_ms?.min ?? 0),
+        max: Number(b.max_ms ?? b.latency_ms?.max ?? 0),
+      },
+      memory_delta_bytes: b.peak_traced_kib ? b.peak_traced_kib * 1024 : Number(b.memory_delta_bytes || 0),
+    }));
+
+    return {
+      timestamp: res?.timestamp || new Date().toISOString(),
+      total_operations: items.length,
+      system_info: {
+        platform: res?.environment?.platform || res?.system_info?.platform || 'Windows (Hardware Timer)',
+        python_version: res?.environment?.python_version || res?.system_info?.python_version || 'Python 3.12',
+        cpu_count: res?.environment?.cpu_count || res?.system_info?.cpu_count || 8,
+      },
+      benchmarks: items,
+    };
+  };
+
   const loadBenchmarks = async () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await api.get<BenchmarkSummary>('/bench/latest');
-      setBenchmarks(res);
+      const res = await api.get<any>('/bench/latest');
+      setBenchmarks(normalizeBenchmarkData(res));
     } catch (err: unknown) {
       setError(err);
     } finally {
@@ -68,9 +96,10 @@ export default function BenchmarksPage() {
       setRunning(true);
       setError(null);
       setSuccess(null);
-      const res = await api.post<BenchmarkSummary>('/bench/run', {});
-      setBenchmarks(res);
-      setSuccess(`Benchmark suite executed successfully (${res.total_operations} operations measured).`);
+      const res = await api.post<any>('/bench/run', {});
+      const normalized = normalizeBenchmarkData(res);
+      setBenchmarks(normalized);
+      setSuccess(`Benchmark suite executed successfully (${normalized.total_operations} operations measured).`);
     } catch (err: unknown) {
       setError(err);
     } finally {
@@ -193,21 +222,29 @@ export default function BenchmarksPage() {
               </tr>
             </thead>
             <tbody>
-              {benchmarks?.benchmarks.map((b) => (
-                <tr key={b.operation} className="mono" style={{ fontSize: '0.84rem' }}>
-                  <td style={{ fontWeight: 600 }}>{b.operation}</td>
-                  <td>{b.iterations}</td>
-                  <td style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>
-                    {b.throughput_ops_sec.toFixed(1)}
-                  </td>
-                  <td>{b.latency_ms.p50.toFixed(3)} ms</td>
-                  <td>{b.latency_ms.p95.toFixed(3)} ms</td>
-                  <td style={{ color: 'var(--accent-rose)', fontWeight: 600 }}>{b.latency_ms.p99.toFixed(3)} ms</td>
-                  <td style={{ color: 'var(--text-secondary)' }}>
-                    {(b.memory_delta_bytes / 1024).toFixed(1)} KB
+              {(benchmarks?.benchmarks || []).length > 0 ? (
+                benchmarks!.benchmarks.map((b) => (
+                  <tr key={b.operation} className="mono" style={{ fontSize: '0.84rem' }}>
+                    <td style={{ fontWeight: 600 }}>{b.operation}</td>
+                    <td>{b.iterations}</td>
+                    <td style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>
+                      {b.throughput_ops_sec.toFixed(1)}
+                    </td>
+                    <td>{b.latency_ms.p50.toFixed(3)} ms</td>
+                    <td>{b.latency_ms.p95.toFixed(3)} ms</td>
+                    <td style={{ color: 'var(--accent-rose)', fontWeight: 600 }}>{b.latency_ms.p99.toFixed(3)} ms</td>
+                    <td style={{ color: 'var(--text-secondary)' }}>
+                      {(b.memory_delta_bytes / 1024).toFixed(1)} KB
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>
+                    No benchmarks recorded yet. Click &quot;Execute Benchmark Suite&quot; above to measure microsecond latency and throughput.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

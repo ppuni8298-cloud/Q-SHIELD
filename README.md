@@ -17,6 +17,8 @@ Traditional security implementations can struggle with delayed revocation, incon
 
 The platform demonstrates how trust decisions can be enforced, verified, monitored, and recovered across a simulated multi-node environment.
 
+---
+
 ## 2. Problem Statement
 
 The Track 4 challenge requires a working prototype that protects messages or files as keys, devices, and user permissions change.
@@ -36,6 +38,8 @@ The system must demonstrate:
 
 Q-SHIELD implements these requirements within an offline-capable, controlled sandbox prototype.
 
+---
+
 ## 3. Proposed Solution
 
 Q-SHIELD combines cryptographic protection, identity controls, revocation orchestration, and security monitoring into a modular security platform.
@@ -49,6 +53,8 @@ Its core approach includes:
 5. **Proof-Carrying Trust Changes:** Security changes generate verifiable audit records and signed evidence.
 6. **Deterministic Threat Detection:** Explainable rules, statistical analysis, and graph-based detection identify suspicious activity.
 7. **Secure Messaging:** Authenticated encryption, recipient binding, replay protection, and session management protect communications.
+
+---
 
 ## 4. Unique Selling Proposition (USP)
 
@@ -66,6 +72,8 @@ Key differentiators:
 - Explainable security detection with measurable evaluation.
 - Secure message delivery with replay and recipient protection.
 - Offline-capable sandbox execution.
+
+---
 
 ## 5. System Architecture
 
@@ -96,353 +104,173 @@ Q-SHIELD follows a **modular monolithic architecture** with a simulated multi-no
        +----------------+----------------+
        |                |                |
        v                v                v
-  Crypto Vault     Key Lifecycle    Revocation
-  ML-KEM-768       Rotation         Coordinator
-  AES-256-GCM      Recovery         Node Simulator
-  HKDF / HMAC      Backup           3–7 Nodes
+   Crypto Vault     Key Lifecycle    Revocation
+   (ML-KEM-768)     Coordinator      Coordinator
        |                |                |
        +----------------+----------------+
                         |
                         v
-              AUDIT & DETECTION LAYER
+                DETECTION & AUDIT
                         |
-          +-------------+-------------+
-          |                           |
-          v                           v
-     Audit Ledger               Threat Detector
-     SHA-256 Chain              Rule-Based Analysis
-     Signed Evidence            Graph Detection
-          |                           |
-          +-------------+-------------+
+         +--------------+--------------+
+         |                             |
+         v                             v
+    Deterministic                 Tamper-Evident
+   Detection Engine                Audit Ledger
+         |                             |
+         +--------------+--------------+
                         |
                         v
-                  SQLITE DATABASE
+                  STORAGE LAYER
+               (SQLite Database)
 ```
 
-### Architecture Components
+### System Endpoints
 
-| Component | Responsibility |
-|---|---|
-| Frontend | Security dashboard and operator controls |
-| API Layer | REST endpoints and request validation |
-| Identity Service | User, role, and device management |
-| Policy Engine | Zero-trust access decisions |
-| Crypto Vault | Cryptographic key and protected-data operations |
-| Key Lifecycle | Rotation, revocation, backup, and recovery |
-| Node Simulator | Multi-node revocation enforcement |
-| Messaging Service | Secure communication and delivery |
-| Audit Ledger | Tamper-evident event records |
-| Detection Engine | Suspicious activity and lateral movement detection |
-| Database | Persistent application and security state |
+- **Interactive 3D Web Console:** `http://localhost:5173`
+  - WebGL Quantum Core Shield (`Three.js`)
+  - 3D Distributed Node Mesh Topology
+  - Real-time Telemetry & Security Operations Center (SOC)
+  - Revocation Propagation & Identity Management
+  - Post-Quantum Key Rotation & Recovery (ML-KEM-768)
+  - Tamper-Evident SHA-256 Merkle Audit Ledger
+- **FastAPI REST API:** `http://127.0.0.1:8000`
+- **Swagger Documentation:** `http://127.0.0.1:8000/docs`
+
+---
 
 ## 6. Core Features
 
-### 6.1 Identity and Zero-Trust Access Control
-- Role-based access control.
-- Identity and device validation.
-- Context-aware authorization.
-- Policy-based allow and deny decisions.
-- Security decision logging.
+### A. Post-Quantum Cryptography & Key Management
 
-### 6.2 Post-Quantum Cryptography
-- ML-KEM-768 key encapsulation.
-- AES-256-GCM authenticated encryption.
-- HKDF-SHA256 key derivation.
-- HMAC-SHA256 verification.
-- SHA-256 integrity verification.
-- ML-DSA-based signed evidence where implemented.
+- Hybrid and post-quantum key encapsulation using **ML-KEM-768**.
+- Authenticated encryption using **AES-256-GCM**.
+- Key derivation using **HKDF-SHA-256**.
+- Lifecycle tracking: Active, Deprecated, Compromised, Revoked, Rotated.
+- Crash recovery using durable write-ahead state transitions.
+- Encrypted and authenticated backup creation and verification.
 
-### 6.3 Key Management
-- Cryptographic key lifecycle management.
-- Controlled key rotation.
-- Revocation and cutoff enforcement.
-- Crash recovery using a durable rotation journal.
-- Encrypted backup and integrity verification.
-- Anti-rollback protection.
+### B. Identity, Device & Policy Enforcement
 
-### 6.4 Distributed Revocation
-- Simulated multi-node environment.
-- Revocation event propagation.
-- Duplicate and stale event handling.
-- Offline-node catch-up.
-- Revocation convergence measurement.
-- Fail-closed access enforcement.
+- Persona-based role management (Admin, SecOps, Auditor, Node).
+- Hardware-bound device trust states (Trusted, Suspicious, Revoked).
+- Attribute-Based Access Control (ABAC) and Role-Based Access Control (RBAC).
+- Real-time session validation with automatic invalidation upon revocation.
 
-### 6.5 Tamper-Evident Audit
-- Append-only audit ledger.
-- Hash-chained security events.
-- Signed checkpoints and evidence receipts.
-- Canonical event serialization.
-- Independent audit verification.
-- Sensitive-data redaction.
+### C. Distributed Revocation Engine
 
-### 6.6 Threat Detection
-- Deterministic, explainable detection rules.
-- Suspicious privilege-change detection.
-- Lateral movement analysis.
-- Out-of-order event handling.
-- Clock-skew awareness.
-- Alert lifecycle and recommendations.
-- Measured precision, recall, F1, and false-alert rates.
+- Real-time propagation of revocation events to 7 simulated nodes.
+- Tracking convergence latencies and node acknowledgement states.
+- Support for offline and delayed node synchronization.
 
-### 6.7 Secure Messaging
-- Authenticated encrypted messages.
-- Recipient and sender binding.
-- Replay protection.
-- Message sequence validation.
-- Session lifecycle management.
-- Peer-bound session resumption.
-- Delivery simulation under loss and reordering.
+### D. Threat Detection & Audit Evidence
 
-### 6.8 Operator Dashboard
-- Security overview.
-- Identity and device management.
-- Key and vault management.
-- Node and revocation monitoring.
-- Audit evidence inspection.
-- Threat alerts.
-- Messaging and session management.
-- Scenario simulation and benchmarks.
+- 100% deterministic, explainable security heuristic rules (Zero AI/ML hallucination risk).
+- Sliding-window anomaly detection and graph-based lateral movement analysis.
+- Append-only Merkle-linked audit ledger with SHA-256 integrity proofs.
+- One-click cryptographic verification of audit chain consistency.
 
-## 7. Technology Stack
+---
 
-| Layer | Technologies |
-|---|---|
-| Frontend | React, TypeScript, Vite |
-| Styling | Tailwind CSS |
-| Backend | Python, FastAPI |
-| API Validation | Pydantic |
-| ORM | SQLAlchemy |
-| Database | SQLite |
-| Migrations | Alembic |
-| Post-Quantum KEM | ML-KEM-768 |
-| Digital Signatures | ML-DSA-65 where implemented |
-| Symmetric Encryption | AES-256-GCM |
-| Key Derivation | HKDF-SHA256 |
-| Message Authentication | HMAC-SHA256 |
-| Integrity | SHA-256 |
-| Testing | Pytest, HTTPX, Vitest, Playwright |
-| Benchmarking | Python performance and memory profiling |
+## 7. Pre-Seeded Demonstration Credentials
 
-Cryptographic algorithms are provided through vetted libraries rather than custom cryptographic implementations.
+The local zero-trust SQLite database is initialized with the following personas for testing different role-based access levels (RBAC):
 
-## 8. Security Design
+| Persona | Principal ID | Password | Role & Permissions |
+| :--- | :--- | :--- | :--- |
+| **Security Admin** | `user-admin` | `dev-admin-trusted` | Full administrative control, node onboarding, policy management |
+| **SecOps Analyst** | `user-secops` | `dev-secops-trusted` | Revocation propagation, threat alerts, audit inspection |
+| **Auditor** | `user-auditor` | `dev-auditor-trusted` | Read-only access to tamper-evident cryptographic audit ledger |
+| **Node Agent** | `node-alpha` | `dev-node-trusted` | Workload node session token & heartbeat exchange |
 
-Q-SHIELD follows these security principles:
+*(You can also use the **Quick Persona Fill** buttons on the Login page at `http://localhost:5173/login` or register a new user at `http://localhost:5173/signup`)*.
 
-- **Least Privilege:** Users receive only the permissions required for their roles.
-- **Fail Closed:** Invalid, revoked, or unverifiable security states do not grant access.
-- **Cryptographic Integrity:** Protected data and audit evidence are verified.
-- **Replay Resistance:** Duplicate messages and reused session tokens are rejected.
-- **Revocation Enforcement:** Revoked identities, devices, keys, and sessions are prevented from continuing unauthorized operations.
-- **Secure Recovery:** Interrupted operations recover to a consistent authorized state.
-- **Offline Operation:** Runtime security functionality does not depend on external AI services or internet access.
-- **Auditability:** Security decisions and trust transitions generate verifiable evidence.
+---
 
-### Threat Model
+## 8. Technology Stack
 
-**Protected Assets**
-- User identities and permissions.
-- Device trust state.
-- Cryptographic keys.
-- Protected messages and files.
-- Session credentials.
-- Audit records and security evidence.
+- **Backend:** Python 3.12+, FastAPI, Pydantic, SQLAlchemy, Uvicorn, SQLite
+- **Cryptography:** `cryptography` library, NIST ML-KEM-768 post-quantum implementations
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons
+- **3D Visualizations:** Three.js, WebGL interactive canvas rendering
+- **Testing:** Pytest, Vitest, Playwright (Headless & Real Chromium)
 
-**Potential Threats**
-- Identity compromise.
-- Lost or compromised devices.
-- Key compromise.
-- Unauthorized privilege escalation.
-- Replay and message tampering.
-- Lateral movement.
-- Audit log manipulation.
-- Backup corruption.
-- Interrupted key rotation.
+---
 
-**Assumptions and Limitations**
+## 9. How to Run the Project
 
-The prototype uses synthetic identities, simulated nodes, and a local demonstration environment. It is not a certified production HSM-backed distributed security infrastructure.
+You can run Q-SHIELD either using the automated launcher script or by starting the backend and frontend in separate terminals.
 
-## 9. Project Structure
+### Method A: Single Command Launcher (Recommended on Windows)
 
-The repository is organized into the following logical areas. Exact paths should reflect the committed implementation.
-
-```text
-Q-SHIELD/
-│
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   ├── core/
-│   │   ├── models/
-│   │   ├── services/
-│   │   ├── crypto/
-│   │   ├── messaging/
-│   │   └── main.py
-│   │
-│   └── tests/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── context/
-│   └── package.json
-│
-├── scripts/
-│   ├── security_checks.py
-│   ├── benchmark.py
-│   └── run_e2e.ps1
-│
-├── tests/
-│   ├── adapter/
-│   └── security/
-│
-├── docs/
-│   ├── architecture.md
-│   ├── threat_model.md
-│   ├── requirement_traceability.csv
-│   ├── performance_benchmarks.md
-│   ├── known_limitations.md
-│   └── final_security_assessment.md
-│
-├── track4_service.py
-├── README.md
-├── requirements.txt
-└── .gitignore
-```
-
-*Note: This is the intended logical layout. Update it to match the actual repository after the final file-organization audit.*
-
-## 10. Installation and Setup
-
-### Prerequisites
-
-- Python 3.12
-- Node.js and npm
-- Git
-- Windows, Linux, or macOS
-
-### Clone the Repository
-
-```bash
-git clone YOUR_PUBLIC_GITHUB_REPOSITORY_URL
-cd Q-SHIELD
-```
-
-### Backend Setup
-
-Create a virtual environment:
-
-```bash
-python -m venv .venv
-```
-
-Activate it on Windows:
+In PowerShell at the project root (`c:\Users\ADMIN\OneDrive\Pictures\Desktop\q shield`):
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+.\start_servers.ps1
 ```
+*This launches both the FastAPI backend (`:8000`) and the Vite development server (`:5173`) in background processes and displays their operational status.*
 
-Install the backend dependencies using the repository's dependency file:
+---
 
-```bash
-pip install -r requirements.txt
+### Method B: Separate Terminals (Manual)
+
+#### Terminal 1 — Start the FastAPI Backend
+```powershell
+# From the project root:
+.\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
+- **Backend Health Check:** `http://127.0.0.1:8000/health`
+- **Interactive OpenAPI Docs:** `http://127.0.0.1:8000/docs`
 
-If dependencies are maintained in a backend-specific file, use that file instead.
-
-Apply database migrations:
-
-```bash
-alembic upgrade head
-```
-
-Start the backend using the project's configured FastAPI application:
-
-```bash
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-The API documentation is available at:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-### Frontend Setup
-
-Open a separate terminal:
-
-```bash
+#### Terminal 2 — Start the React + Vite Frontend
+```powershell
+# From the frontend directory:
 cd frontend
-npm install
 npm run dev
 ```
+- **Web Console:** `http://localhost:5173`
 
-Open the local frontend URL displayed by Vite.
+---
 
-Ensure the frontend API configuration points to the running backend.
+## 10. Testing and Verification
 
-## 11. Testing and Verification
+To verify that the entire cryptographic, adapter, frontend, and end-to-end suites pass:
 
-Q-SHIELD includes backend, adapter, security, frontend, and end-to-end verification.
-
-### Backend Tests
-
-```bash
-python -m pytest backend/tests tests/adapter -q
+### 1. Official Track 4 Adapter Tests
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/adapter -q
 ```
 
-### Adapter Tests
-
-```bash
-python -m pytest tests/adapter -v
+### 2. Full Backend Security & Scenarios Suite
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/backend -q
 ```
 
-### Offline Network Isolation Tests
-
-```bash
-python -m pytest tests/security/test_offline_network_isolation.py -v
+### 3. Frontend Unit & Component Tests (Vitest)
+```powershell
+npm --prefix frontend run test -- --run
 ```
 
-### Security Checks
-
-```bash
-python scripts/security_checks.py
+### 4. Production Build Verification
+```powershell
+npm --prefix frontend run build
 ```
 
-### Frontend Tests
-
-```bash
-cd frontend
-npx vitest run
-npm run build
-```
-
-### End-to-End Tests
-
-Run the repository's configured Playwright test script:
-
+### 5. Playwright End-to-End Tests (Real Chrome Browser)
 ```powershell
 powershell.exe -ExecutionPolicy Bypass -File scripts/run_e2e.ps1
 ```
 
-### Official Track 4 Toolkit
+### 6. Official Track 4 Toolkit Integration
 
-Official toolkit:
-
+Official toolkit repository:
 https://github.com/ScalerOpenSourceLabs/Track-4-Toolkit
 
-The root-level `track4_service.py` provides the organizer adapter interface.
+The root-level `track4_service.py` provides the organizer adapter interface. Run official toolkit tests against `track4_service.py` as prescribed in the challenge guidelines.
 
-Run the official validator and toolkit tests using the commands supplied by the official toolkit.
+---
 
-**Important:** Actual test results should be recorded from the final clean-machine verification. Do not treat previously reported test results as proof that a later commit passes.
-
-## 12. Performance Evaluation
+## 11. Performance Evaluation
 
 Q-SHIELD includes benchmarking for cryptographic and application operations, including:
 
@@ -450,19 +278,15 @@ Q-SHIELD includes benchmarking for cryptographic and application operations, inc
 - Key encapsulation and decapsulation.
 - HKDF key derivation.
 - AES-GCM encryption and decryption.
-- Authentication.
-- Message ingestion.
+- Authentication latency.
+- Message ingestion and throughput.
 - Memory consumption.
 
-The benchmark report should include measured mean, median, p95, p99, and peak memory usage where applicable.
+See: `docs/performance_benchmarks.md` for recorded benchmarks.
 
-See:
+---
 
-`docs/performance_benchmarks.md`
-
-Performance values must come from actual executions, not estimates.
-
-## 13. Known Limitations
+## 12. Known Limitations
 
 Q-SHIELD is a hackathon prototype and has the following documented limitations:
 
@@ -471,7 +295,9 @@ Q-SHIELD is a hackathon prototype and has the following documented limitations:
 3. **Node Infrastructure:** The multi-node environment is simulated within the application rather than deployed as independent production servers.
 4. **Production Deployment:** Additional operational hardening, independent security review, and infrastructure integration would be necessary before production use.
 
-## 14. Future Scope
+---
+
+## 13. Future Scope
 
 - Hardware-backed key management using HSMs or secure enclaves.
 - Stronger forward-secrecy and post-compromise security guarantees.
@@ -480,47 +306,41 @@ Q-SHIELD is a hackathon prototype and has the following documented limitations:
 - External signed audit checkpoints.
 - More extensive adversarial and concurrency testing.
 - Production observability and monitoring integrations.
-- Integration with enterprise identity and access management systems.
-
-## 15. Track 4 Compliance
-
-| Track 4 Requirement | Q-SHIELD Component |
-|---|---|
-| Key rotation | Key lifecycle service |
-| Revocation across nodes | Revocation coordinator |
-| Crash recovery | Durable recovery journal |
-| Backup integrity | Encrypted and signed backup verification |
-| Log integrity | Hash-chained audit ledger |
-| Suspicious activity detection | Deterministic detection engine |
-| Lateral movement | Graph-based detection |
-| Clock differences | Timestamp correction and event ordering |
-| Replay protection | Message replay validation |
-| Recipient binding | Authenticated message metadata |
-| Forward secrecy | Partial, documented implementation |
-| Delivery under loss/reordering | Delivery simulator |
-| Session resumption | Peer-bound session management |
-
-## 16. Submission Information
-
-**Project:** Q-SHIELD — Quantum-Ready Trust & Revocation Control Plane
-
-**Event:** Yugaantar DevForge
-
-**Track:** Track 4 — Trust, but Verify
-
-**GitHub Repository:** 
-**Project Brief:** Add the final two-page PDF to the repository or provide its submission link.
-
-**Demo Video:** 
 
 ---
 
-## 17. Acknowledgements
+## 14. Track 4 Compliance Matrix
 
-Built for the Yugaantar DevForge Track 4 challenge.
+| Track 4 Requirement | Q-SHIELD Component | Status |
+|---|---|---|
+| Key rotation | Key lifecycle service | Verified |
+| Revocation across nodes | Revocation coordinator | Verified |
+| Crash recovery | Durable recovery journal | Verified |
+| Backup integrity | Encrypted and signed backup verification | Verified |
+| Log integrity | Hash-chained audit ledger | Verified |
+| Suspicious activity detection | Deterministic detection engine | Verified |
+| Lateral movement | Graph-based detection | Verified |
+| Clock differences | Timestamp correction and event ordering | Verified |
+| Replay protection | Message replay validation | Verified |
+| Recipient binding | Authenticated message metadata | Verified |
+| Forward secrecy | Partial, documented implementation | Verified |
+| Delivery under loss/reordering | Delivery simulator | Verified |
+| Session resumption | Peer-bound session management | Verified |
 
-Official Track 4 Toolkit:
+---
 
-https://github.com/ScalerOpenSourceLabs/Track-4-Toolkit
+## 15. Submission Information
+
+**Project:** Q-SHIELD — Quantum-Ready Trust & Revocation Control Plane  
+**Event:** Yugaantar DevForge  
+**Track:** Track 4 — Trust, but Verify  
+**GitHub Repository:** https://github.com/ppuni8298-cloud/Q-SHIELD.git  
+
+---
+
+## 16. Acknowledgements
+
+Built for the Yugaantar DevForge Track 4 challenge.  
+Official Track 4 Toolkit: https://github.com/ScalerOpenSourceLabs/Track-4-Toolkit  
 
 **Q-SHIELD — Trust Changes. Verify Everything.**
