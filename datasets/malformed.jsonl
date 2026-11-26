@@ -1,0 +1,4 @@
+{"event_id":"fx-mal-valid","event_time_utc":"2026-11-26T09:40:00+00:00","received_time_utc":"2026-11-26T09:40:00.050000+00:00","actor_id":"fx-mal-u","action":"read","outcome":"ALLOW"}
+{TRUNCATED_NOT_VALID_JSON
+{"event_id":"fx-mal-nan","value":NaN,"actor_id":"fx-mal-u"}
+["not-a-dict"]

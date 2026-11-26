@@ -1,0 +1,14 @@
+operation,category,samples,warmup,median_ms,p95_ms,min_ms,max_ms,throughput_ops_sec,peak_traced_kib,errors
+ml_kem_768_encap_decap,Cryptography,120,10,0.2779,0.3781,0.2609,0.5648,3359.3,5.06,0
+ml_dsa_65_sign_verify,Cryptography,100,5,0.9853,1.7658,0.6207,2.9511,927.12,4.35,0
+hkdf_sha256_derive,Cryptography,200,20,0.0907,0.1104,0.0527,0.1311,11707.82,4.86,0
+aes_256_gcm_1kib_roundtrip,Cryptography,200,10,0.0233,0.0288,0.0225,0.0528,36277.89,43.58,0
+aes_256_gcm_64kib_roundtrip,Cryptography,100,5,0.0626,0.0728,0.0604,0.0979,15162.08,175.89,0
+zero_trust_10step_policy_eval,Authorization,120,10,9.2966,12.6962,7.9721,20.1964,104.15,196.55,0
+auth_demo_login,Authentication,100,5,17.73,27.4214,14.2749,532.6373,41.72,63.79,0
+audit_ledger_append,Audit,100,5,8.6188,13.6547,7.8579,16.5401,106.02,50.02,0
+audit_ledger_verify_chain,Audit,30,3,82.6248,91.2178,77.3468,95.9445,11.93,657.8,0
+e2e_message_send_receive,Messaging,30,3,172.6014,228.8077,77.4206,283.8941,6.4,175.88,0
+revocation_propagation_3nodes,Revocation,15,2,163.0762,224.2384,99.9879,248.0792,6.2,204.77,0
+backup_create_and_verify,Backup,10,1,49.9102,63.2673,45.004,69.4684,19.2,177.36,0
+detector_322_events_26_rules,ThreatDetector,30,3,253.6515,348.153,226.4871,359.2403,3.8,1235.6,0

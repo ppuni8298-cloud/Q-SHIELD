@@ -1,0 +1,1 @@
+"""Protected-resource metadata package."""

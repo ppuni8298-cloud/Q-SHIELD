@@ -1,0 +1,27 @@
+{
+  "schema_version": "qshield.threat-model.v1",
+  "project": "Q-SHIELD (Quantum-Ready Trust & Revocation Control Plane)",
+  "asset": "protected-resource",
+  "boundary": "identity-check",
+  "adapter_entrypoint": "track4_service.py",
+  "trust_boundaries": [
+    "browser-to-fastapi-api",
+    "toolkit-worker-to-root-adapter-stdin-stdout",
+    "actor-device-session-to-10step-policy-engine",
+    "control-plane-to-simulated-nodes",
+    "local-encrypted-keystore-to-vault-and-messaging",
+    "telemetry-to-audit-ledger-and-deterministic-detector"
+  ],
+  "cryptography": [
+    "ML-KEM-768",
+    "ML-DSA-65",
+    "AES-256-GCM",
+    "HKDF-SHA-256",
+    "HMAC-SHA-256",
+    "SHA-256"
+  ],
+  "ai_ml_runtime": false,
+  "forward_secrecy": "PARTIAL_CONTROL_PLANE_MEDIATED",
+  "hsm_backed": false,
+  "distributed_nodes_mode": "deterministic_local_sqlite_simulator_3_to_7"
+}

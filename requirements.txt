@@ -1,0 +1,11 @@
+alembic==1.20.1
+cryptography==50.0.2
+fastapi==0.165.0
+httpx==0.28.1
+pqcrypto==0.4.0
+pydantic==2.14.4
+pydantic-settings==2.16.3
+pytest==9.2.0
+SQLAlchemy==2.1.9
+starlette==1.10.0
+uvicorn==0.54.0
